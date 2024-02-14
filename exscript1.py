@@ -1,3 +1,3 @@
 #!/bin/bash
-#Machine's uptime
-uptime --p
+#Machine's date
+date
