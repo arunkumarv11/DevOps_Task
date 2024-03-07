@@ -3,9 +3,11 @@
   hosts: dbserver #group of DBservers
   become: yes 
   tasks:
-    -name: Install mariadb-server
+    -name: Install mariadb-server & pymysql dependencies
      ansible.builtin.yum:
-       name: mariadb-server
+       name: 
+        - mariadb-server
+        - python3-PyMySQL
        state: present
     -name: Start the DB service
      ansible.builtin.service:
@@ -16,3 +18,11 @@
      mysql_db: #needs the python dependencies to work
         name: accounts
         state: present
+        login_unix_socket: /var/lib/mysql/mysql.sock #need this socket info to connect to the server
+    -name: Create a Database 'user' with password
+     community.mysql.mysql_db: #community module needs to be installed using ansible-galaxy
+        name: arun
+        password: 1234
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
+        
