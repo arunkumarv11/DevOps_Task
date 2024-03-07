@@ -1,0 +1,29 @@
+---
+- name: Webserver Setup
+  hosts: webserver #group of servers
+  become: yes #sudo
+  tasks:
+    -name: Install httpd
+     ansible.builtin.yum:
+        name: httpd
+        state: present
+    -name: Start service
+    ansible.builtin.service:
+      name: httpd
+      state: started
+      enabled: yes
+     
+- name: DBServer Setup
+  hosts: dbserver #group of DBservers
+  become: yes 
+  tasks:
+    -name: Install mariadb-server
+     ansible.builtin.yum:
+       name: mariadb-server
+       state: present
+    -name: Start the DB service
+     ansible.builtin.service:
+       name: mariadb-server
+       state: started
+       enabled: yes
+       

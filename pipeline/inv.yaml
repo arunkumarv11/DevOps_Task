@@ -1,0 +1,36 @@
+all:
+  hosts:
+    web01:
+	  ansible_host: 172.31.31.70
+#ansible_user: ec2-user
+#ansible_ssh_private_key_file: clientkey.pem
+#place the private key of the machine(ansible control) with this keyname in the same directory
+	web02:
+	  ansible_host: 172.31.31.70
+#ansible_user: ec2-user
+#ansible_ssh_private_key_file: clientkey.pem
+	db01:
+	  ansible_host: 172.31.31.70
+	  
+  children:
+    web_servers:
+      hosts:
+        web01:
+        web02:
+      vars:
+        ansible_user: ec2-user
+        ansible_ssh_private_key_file: clientkey.pem
+    db_servers:
+       hosts:
+        db01:
+       vars:
+         ansible_user: ec2-user
+         ansible_ssh_private_key_file: clientkey.pem
+         
+ #To create a parent group for groups
+ 
+    par_grp:
+      children:
+        web_servers:
+        db_servers:
+        
