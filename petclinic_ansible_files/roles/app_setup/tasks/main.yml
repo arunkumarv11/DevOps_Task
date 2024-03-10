@@ -1,0 +1,93 @@
+---
+# tasks file for app_setup
+- name: Update apt
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Java 17
+  ansible.builtin.apt:
+    name: openjdk-17-jdk
+    state: present
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - git
+      - unzip
+      - zip
+    state: present
+
+
+- name: Download Apache Maven archive
+  get_url:
+    url: "https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.zip"
+    dest: "/tmp/apache-maven-3.8.8-bin.zip"
+
+- name: Unzip Apache Maven archive
+  ansible.builtin.unarchive:
+    src: "/tmp/apache-maven-3.8.8-bin.zip"
+    dest: "/opt/"
+    remote_src: yes
+
+- name: Add Maven to /etc/environment
+  lineinfile:
+    path: /etc/environment
+    line: 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/apache-maven-3.8.8/bin"'
+    create: yes
+
+- name: Reload profile
+  ansible.builtin.shell: . /etc/environment
+
+- name: Download Tomcat 10
+  get_url:
+    url: "https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.19/bin/apache-tomcat-10.1.19.zip"
+    dest: "/tmp/apache-tomcat-10.1.19.zip"
+
+- name: Unzip tomcat 10 archive
+  ansible.builtin.unarchive:
+    src: "/tmp/apache-tomcat-10.1.19.zip"
+    dest: "/tmp/"
+    remote_src: yes
+  when: not ansible_check_mode
+
+- name: Create Tomcat user
+  user:
+    name: tomcat
+    home: /usr/local/tomcat
+    shell: /sbin/nologin
+
+- name: Copy Tomcat files
+  ansible.builtin.copy:
+    src: "/tmp/apache-tomcat-10.1.19/"
+    dest: "/usr/local/tomcat/"
+    remote_src: yes
+    owner: tomcat
+    group: tomcat
+    mode: "0755"
+  when: not ansible_check_mode
+
+- name: Create Tomcat service file
+  ansible.builtin.template:
+    src: tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+
+- name: Set execute permissions on exec files
+  file:
+    path: "{{ item }}"
+    mode: "+x"
+  loop:
+    - /usr/local/tomcat/bin/catalina.sh
+    - /usr/local/tomcat/bin/shutdown.sh
+  when: not ansible_check_mode
+
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name:
+  ansible.builtin.service:
+    name: tomcat
+    state: started
+    enabled: yes
+

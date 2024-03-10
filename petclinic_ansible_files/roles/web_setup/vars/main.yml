@@ -1,0 +1,6 @@
+---
+# vars file for web_setup
+availsite: /etc/nginx/sites-available/petclinicapp
+enabsite: /etc/nginx/sites-enabled/petclinicapp
+defaultsite: /etc/nginx/sites-enabled/default
+

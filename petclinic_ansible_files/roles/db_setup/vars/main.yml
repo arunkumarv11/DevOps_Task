@@ -1,0 +1,7 @@
+---
+# vars file for db_setup
+
+dbname: petclinic
+dbuser: admin
+dbpass: petclinic
+
