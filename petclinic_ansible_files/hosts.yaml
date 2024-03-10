@@ -1,0 +1,28 @@
+all:
+  hosts:
+    web01:
+      ansible_host: 192.168.56.11
+      ansible_user: vagrant 
+    app01:
+      ansible_host: 192.168.56.12
+      ansible_user: vagrant
+    db01:
+      ansible_host: 192.168.56.15
+      ansible_user: vagrant
+  children:
+    web_server:
+      hosts:
+        web01:
+    app_server:
+      hosts:
+        app01:
+    db_server:
+      hosts:
+        db01:
+        
+# To create a parent group for groups
+    par_grp:
+      children:
+        web_server:
+        db_server:
+        app_server:

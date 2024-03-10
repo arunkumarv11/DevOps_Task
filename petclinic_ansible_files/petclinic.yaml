@@ -1,0 +1,21 @@
+---
+- name: DB Server Setup
+  hosts: db_server 
+  become: yes
+  roles:
+    - db_setup 
+
+- name: Web Server Setup
+  hosts: web_server 
+  become: yes
+  roles:
+    - web_setup
+
+- name: Application Server Setup
+  hosts: app_server 
+  become: yes
+  roles:
+    - app_setup
+    - artifact_build
+
+

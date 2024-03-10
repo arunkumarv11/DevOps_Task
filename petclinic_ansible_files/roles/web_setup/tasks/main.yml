@@ -1,0 +1,41 @@
+---
+# tasks file for web_setup
+- name: Update apt
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Create petclinicapp file
+  copy:
+    dest: '{{ availsite }}'
+    content: |
+      upstream petclinicapp {
+        server app01:8080;
+         }
+      server {
+        listen 80;
+      location / {
+            proxy_pass http://petclinicapp;
+            }
+            }
+
+- name: Remove default Nginx configuration file
+  file:
+    path: '{{ defaultsite }}'
+    state: absent
+
+- name: Create link for petclinicapp
+  file:
+    src: '{{ availsite }}'
+    dest: '{{ enabsite }}'
+    state: link
+
+- name: Restart the service
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+
