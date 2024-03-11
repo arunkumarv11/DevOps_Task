@@ -21,12 +21,14 @@
     replace: '{{ item.replace_string }}'
     backup: yes
   loop:
-    - { search_string: '<mysql-driver.version>8.1.0</mysql-driver.version>', replace_string: '<mysql-driver.version>8.0.33</mysql-driver.version>' }
+    - { search_string: '<groupId>mysql</groupId>', replace_string: '<groupId>com.mysql</groupId>' }
+    - { search_string: '<artifactId>mysql-connector-java</artifactId>', replace_string: '<artifactId>mysql-connector-j</artifactId>' }
+    - { search_string: '<maven-surefire-plugin.version>3.2.3</maven-surefire-plugin.version>', replace_string: '<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>' }
     - { search_string: 'mysql://localhost:3306/', replace_string: 'mysql://db01:3306/' }
     - { search_string: '<jdbc.username>petclinic', replace_string: '<jdbc.username>admin' }
 
 - name: Build the JAVA Application
-  command: ./mvnw clean package -P MySQL -DskipTests
+  command: ./mvnw clean package -P MySQL
   args:
      chdir: /tmp/spring-framework-petclinic
 
