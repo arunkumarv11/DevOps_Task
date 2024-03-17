@@ -559,8 +559,8 @@
                 <db.script>mysql</db.script>
                 <jpa.database>MYSQL</jpa.database>
                 <jdbc.driverClassName>com.mysql.cj.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql://db01:3306/petclinic?useUnicode=true</jdbc.url>
-                <jdbc.username>admin</jdbc.username>
+                <jdbc.url>jdbc:mysql://petdb:3306/petclinic?useUnicode=true</jdbc.url>
+                <jdbc.username>root</jdbc.username>
                 <jdbc.password>petclinic</jdbc.password>
             </properties>
             <dependencies>
